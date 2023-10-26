@@ -56,14 +56,15 @@ document.observe('click', function(e, el) {
 
 document.observe('click', function(e, el) {
   if (el = e.findElement('form a.remove_nested_fields')) {
-    var hidden_field = el.previous(0),
-        assoc = el.readAttribute('data-association'); // Name of child to be removed
-    if(hidden_field) {
+    var hidden_fields = $$(el.up('form').select('input[type="hidden"][id$="_destroy"]'));
+    var assoc = el.readAttribute('data-association'); // Name of child to be removed
+    hidden_fields.each(function(hidden_field) {
       hidden_field.value = '1';
-    }
+    });
     var field = el.up('.fields').hide();
-    field.fire('nested:fieldRemoved', {field: field});
-    field.fire('nested:fieldRemoved:' + assoc, {field: field});
+    field.fire('nested:fieldRemoved', { field: field });
+    field.fire('nested:fieldRemoved:' + assoc, { field: field });
     return false;
   }
 });
+
